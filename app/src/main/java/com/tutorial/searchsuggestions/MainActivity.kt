@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tutorial.searchsuggestions.ui.scene.HomeScene
 import com.tutorial.searchsuggestions.ui.scene.SearchScene
-import com.tutorial.searchsuggestions.ui.theme.SearchSuggestionsTheme
+import com.tutorial.searchsuggestions.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            SearchSuggestionsTheme {
+            AppTheme {
                 SearchSuggestionsApp()
             }
         }
