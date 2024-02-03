@@ -3,4 +3,5 @@
     <!-- Search Bar -->
     <string name="content_description_close">Close</string>
     <string name="content_description_clear">Clear</string>
+    <string name="placeholder_search_bar">Type keyword for suggestions</string>
 </resources>
