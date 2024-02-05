@@ -8,23 +8,38 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.tutorial.searchsuggestions.setSearchTerm
 import com.tutorial.searchsuggestions.ui.component.SearchBar
 import com.tutorial.searchsuggestions.ui.component.SearchSuggestionsList
 import com.tutorial.searchsuggestions.viewmodel.SearchViewModel
 import com.tutorial.searchsuggestions.viewmodel.uistate.SearchUiState
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScene(viewModel: SearchViewModel = hiltViewModel()) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
 
     val uiState = viewModel.uiState.collectAsState().value
+
+    uiState.error?.let {
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(it.message.orEmpty())
+            viewModel.onErrorConfirmed()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -34,7 +49,7 @@ fun SearchScene(viewModel: SearchViewModel = hiltViewModel()) {
                     .padding(16.dp),
                 query = uiState.query,
                 onQueryChange = { viewModel.onQueryChange(it) },
-                onSearch = { /*TODO*/ },
+                onSearch = { navController.setSearchTerm(uiState.query) },
                 onClose = { navController.popBackStack() },
                 onClear = { viewModel.onClear() }
             )
@@ -45,7 +60,8 @@ fun SearchScene(viewModel: SearchViewModel = hiltViewModel()) {
                 uiState = uiState,
                 onSelect = { viewModel.onQueryChange(it) }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     )
 }
 
@@ -76,10 +92,6 @@ private fun SearchSceneContent(
                 results = it.results,
                 onSelect = onSelect
             )
-        }
-
-        uiState.error?.let {
-            /*TODO*/
         }
     }
 }

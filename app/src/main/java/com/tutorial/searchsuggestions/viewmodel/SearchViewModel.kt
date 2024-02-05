@@ -60,6 +60,10 @@ class SearchViewModel @Inject constructor(
         _uiState.update { it.copy(query = "") }
     }
 
+    fun onErrorConfirmed() {
+        _uiState.update { it.copy(error = null) }
+    }
+
     private companion object {
         const val DEBOUNCE_TIME_MS = 300L
     }
