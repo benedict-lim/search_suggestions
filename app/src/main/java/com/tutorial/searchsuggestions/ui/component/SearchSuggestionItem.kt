@@ -32,7 +32,6 @@ import com.tutorial.searchsuggestions.ui.theme.AppTheme
 fun SearchSuggestionItem(
     keyword: String,
     value: String,
-    onSearch: (String) -> Unit,
     onSelect: (String) -> Unit
 ) {
     Row(
@@ -42,7 +41,7 @@ fun SearchSuggestionItem(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        SearchIcon(value = value, onSearch = onSearch)
+        SearchIcon()
 
         ValueText(keyword = keyword, value = value)
 
@@ -51,9 +50,8 @@ fun SearchSuggestionItem(
 }
 
 @Composable
-private fun SearchIcon(value: String, onSearch: (String) -> Unit) {
+private fun SearchIcon() {
     Icon(
-        modifier = Modifier.clickable { onSearch(value) },
         imageVector = Icons.Filled.Search,
         tint = Color.DarkGray,
         contentDescription = stringResource(R.string.content_description_search)
@@ -98,7 +96,6 @@ private fun PreviewSearchSuggestionItem() {
             SearchSuggestionItem(
                 keyword = "disney",
                 value = "Things to do at Tokyo Disneyland",
-                onSearch = {},
                 onSelect = {}
             )
         }
