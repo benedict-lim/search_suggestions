@@ -56,6 +56,7 @@ android {
 dependencies {
 
     implementation(libs.core.ktx)
+    implementation(libs.browser)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.gson)

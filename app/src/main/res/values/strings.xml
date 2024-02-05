@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Search Suggestions</string>
+    <!-- Browser -->
+    <string name="error_open_browser">Unable to open link in a browser. Check if a browser application is installed.</string>
     <!-- Search Bar -->
     <string name="content_description_close">Close</string>
     <string name="content_description_clear">Clear</string>
