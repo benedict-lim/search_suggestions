@@ -2,9 +2,14 @@ package com.tutorial.searchsuggestions
 
 import androidx.navigation.NavHostController
 
-internal enum class Router(val route: String) {
-    Home("home"),
-    Search("search");
+internal enum class Router(val route: String, val param: String) {
+    Home("home", ""),
+    Search("search", "keyword");
+
+    val fullRoute: String
+        get() = if (param.isBlank()) route else "$route/{$param}"
+
+    fun createRoute(param: String): String = "$route/$param"
 
     companion object {
         const val ARG_QUERY = "query"

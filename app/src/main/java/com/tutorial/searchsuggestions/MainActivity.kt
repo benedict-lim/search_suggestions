@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tutorial.searchsuggestions.browser.BrowserClient
 import com.tutorial.searchsuggestions.ui.scene.HomeScene
 import com.tutorial.searchsuggestions.ui.scene.SearchScene
@@ -41,11 +43,16 @@ class MainActivity : ComponentActivity() {
                 navController = navController,
                 startDestination = Router.Home.route
             ) {
-                composable(Router.Home.route) {
+                composable(Router.Home.fullRoute) {
                     HomeScene(browserClient)
                 }
-                composable(Router.Search.route) {
-                    SearchScene()
+                composable(
+                    Router.Search.fullRoute,
+                    arguments = listOf(
+                        navArgument(Router.Search.param) { type = NavType.StringType}
+                    )
+                ) {
+                    SearchScene(initialSearchTerm = it.arguments?.getString(Router.Search.param))
                 }
             }
         }

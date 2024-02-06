@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,10 +29,17 @@ import com.tutorial.searchsuggestions.viewmodel.uistate.SearchUiState
 import kotlinx.coroutines.launch
 
 @Composable
-fun SearchScene(viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchScene(initialSearchTerm: String?, viewModel: SearchViewModel = hiltViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
+
+    // Set initial search term in search bar and retrieve results
+    LaunchedEffect(Unit) {
+        if (!initialSearchTerm.isNullOrBlank()) {
+            viewModel.onQueryChange(initialSearchTerm)
+        }
+    }
 
     val uiState = viewModel.uiState.collectAsState().value
 

@@ -37,23 +37,26 @@ fun HomeScene(browserClient: BrowserClient) {
         browserClient.launchUrl("https://www.google.com/search?q=$it".toUri())
     }
 
-    Scaffold(
-        content = { padding ->
-            HomeSceneContent(
-                contentPadding = padding,
-                onSearch = { navController.navigate(Router.Search.route) }
-            )
-        }
-    )
+    // Retain search term when returning from search suggestions screen
+    var searchTerm by rememberSaveable { mutableStateOf("") }
+
+    Scaffold { padding ->
+        HomeSceneContent(
+            contentPadding = padding,
+            searchTerm = searchTerm,
+            onSearchTermChange = { searchTerm = it },
+            onSearch = { navController.navigate(Router.Search.createRoute(searchTerm)) }
+        )
+    }
 }
 
 @Composable
 private fun HomeSceneContent(
     contentPadding: PaddingValues,
+    searchTerm: String,
+    onSearchTermChange: (String) -> Unit,
     onSearch: () -> Unit
 ) {
-    var value by rememberSaveable { mutableStateOf("") }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -69,8 +72,8 @@ private fun HomeSceneContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                value = value,
-                onValueChange = { value = it },
+                value = searchTerm,
+                onValueChange = onSearchTermChange,
                 onSearch = onSearch
             )
         }
