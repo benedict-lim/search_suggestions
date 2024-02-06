@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.tutorial.searchsuggestions.LocalNavController
 import com.tutorial.searchsuggestions.R
 import com.tutorial.searchsuggestions.Router
 import com.tutorial.searchsuggestions.browser.BrowserClient
@@ -21,7 +22,7 @@ import com.tutorial.searchsuggestions.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScene(browserClient: BrowserClient, viewModel: HomeViewModel = hiltViewModel()) {
-    val navController = rememberNavController()
+    val navController = LocalNavController.current
 
     // Retrieve search term and open search results
     navController.handleSearchTerm {

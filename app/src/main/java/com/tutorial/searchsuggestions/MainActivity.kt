@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,15 +36,17 @@ class MainActivity : ComponentActivity() {
     private fun SearchSuggestionsApp() {
         val navController = rememberNavController()
 
-        NavHost(
-            navController = navController,
-            startDestination = Router.Home.route
-        ) {
-            composable(Router.Home.route) {
-                HomeScene(browserClient)
-            }
-            composable(Router.Search.route) {
-                SearchScene()
+        CompositionLocalProvider(LocalNavController provides navController) {
+            NavHost(
+                navController = navController,
+                startDestination = Router.Home.route
+            ) {
+                composable(Router.Home.route) {
+                    HomeScene(browserClient)
+                }
+                composable(Router.Search.route) {
+                    SearchScene()
+                }
             }
         }
     }

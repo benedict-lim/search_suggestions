@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.tutorial.searchsuggestions.LocalNavController
 import com.tutorial.searchsuggestions.setSearchTerm
 import com.tutorial.searchsuggestions.ui.component.SearchBar
 import com.tutorial.searchsuggestions.ui.component.SearchSuggestionsList
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
 fun SearchScene(viewModel: SearchViewModel = hiltViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    val navController = rememberNavController()
+    val navController = LocalNavController.current
 
     val uiState = viewModel.uiState.collectAsState().value
 
