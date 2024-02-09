@@ -20,6 +20,7 @@ fun StatefulContentDialog(
     state: ContentDialogState,
     title: String? = null,
     properties: DialogProperties = DialogProperties(),
+    cancellable: Boolean = true,
     onDismissRequest: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
@@ -27,6 +28,7 @@ fun StatefulContentDialog(
         ContentDialog(
             title = title,
             properties = properties,
+            cancellable = cancellable,
             onDismissRequest = {
                 onDismissRequest()
                 state.hide()
@@ -37,11 +39,12 @@ fun StatefulContentDialog(
 }
 
 @Composable
-fun rememberContentDialogState() = remember { ContentDialogState() }
+fun rememberContentDialogState(showDialog: Boolean = false) =
+    remember { ContentDialogState(showDialog) }
 
 /** State to control display status of content dialog */
-class ContentDialogState {
-    private var _showDialog = mutableStateOf(false)
+class ContentDialogState(showDialog: Boolean) {
+    private var _showDialog = mutableStateOf(showDialog)
     val showDialog: Boolean
         get() = _showDialog.value
 

@@ -46,6 +46,7 @@ private val TITLE_CONTENT_VERTICAL_SPACING = 16.dp
 fun ContentDialog(
     title: String? = null,
     properties: DialogProperties = DialogProperties(),
+    cancellable: Boolean = true,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -59,8 +60,8 @@ fun ContentDialog(
                     .fillMaxWidth()
                     .padding(CONTENT_PADDING_DP)
             ) {
-                // Close button
-                CloseButton(onDismissRequest = onDismissRequest)
+                // Close button (display only if cancellable)
+                if (cancellable) CloseButton(onDismissRequest = onDismissRequest)
 
                 // Title (display only if defined)
                 title?.let { DialogTitle(title = it) }
