@@ -22,7 +22,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import com.tutorial.searchsuggestions.LocalNavController
 import com.tutorial.searchsuggestions.R
 import com.tutorial.searchsuggestions.Router
@@ -36,8 +35,7 @@ fun HomeScene(browserClient: BrowserClient) {
 
     // Retrieve search term and open search results
     navController.handleSearchTerm {
-        // TODO: Set URL as config
-        browserClient.launchUrl("https://www.google.com/search?q=$it".toUri())
+        browserClient.openSearchResults(it)
     }
 
     // Retain search term when returning from search suggestions screen

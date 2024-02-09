@@ -11,6 +11,13 @@ import com.tutorial.searchsuggestions.R
 
 interface BrowserClient {
     /**
+     * Open search results in designated search engine (Google)
+     *
+     * @param searchTerm Confirmed input of search term
+     */
+    fun openSearchResults(searchTerm: String)
+
+    /**
      * Open link in a Custom Tab, or external browser if not available
      *
      * @param uri Uri of link
@@ -19,6 +26,15 @@ interface BrowserClient {
 }
 
 class BrowserClientImpl(private val context: Context) : BrowserClient {
+
+    override fun openSearchResults(searchTerm: String) {
+        val url = Uri.parse(SEARCH_URL)
+            .buildUpon()
+            .appendQueryParameter(SEARCH_QUERY_PARAM, searchTerm)
+            .build()
+
+        launchUrl(url)
+    }
 
     override fun launchUrl(uri: Uri) {
         val intent = CustomTabsIntent.Builder()
@@ -49,5 +65,10 @@ class BrowserClientImpl(private val context: Context) : BrowserClient {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    private companion object {
+        const val SEARCH_URL = "https://www.google.com/search"
+        const val SEARCH_QUERY_PARAM = "q"
     }
 }
