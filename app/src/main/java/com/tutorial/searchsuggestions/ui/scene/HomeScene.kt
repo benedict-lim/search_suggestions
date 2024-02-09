@@ -11,8 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,31 +24,40 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tutorial.searchsuggestions.LocalNavController
 import com.tutorial.searchsuggestions.R
 import com.tutorial.searchsuggestions.Router
 import com.tutorial.searchsuggestions.browser.BrowserClient
 import com.tutorial.searchsuggestions.handleSearchTerm
+import com.tutorial.searchsuggestions.ui.component.AlertDialog
 import com.tutorial.searchsuggestions.ui.component.SearchTextField
+import com.tutorial.searchsuggestions.viewmodel.HomeViewModel
+import com.tutorial.searchsuggestions.viewmodel.uistate.HomeUiState
 
 @Composable
-fun HomeScene(browserClient: BrowserClient) {
+fun HomeScene(browserClient: BrowserClient, viewModel: HomeViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
 
-    // Retrieve search term and open search results
     navController.handleSearchTerm {
-        browserClient.openSearchResults(it)
+        viewModel.onSearchTermConfirmed(it)
     }
 
-    // Retain search term when returning from search suggestions screen
-    var searchTerm by rememberSaveable { mutableStateOf("") }
+    val uiState = viewModel.uiState.collectAsState().value
 
     Scaffold { padding ->
         HomeSceneContent(
             contentPadding = padding,
-            searchTerm = searchTerm,
-            onSearchTermChange = { searchTerm = it },
-            onSearch = { navController.navigate(Router.Search.createRoute(searchTerm)) }
+            uiState = uiState,
+            onSearchTermChange = { viewModel.onSearchTermChange(it) },
+            onSearch = {
+                navController.navigate(Router.Search.createRoute(uiState.initialSearchTerm))
+            },
+            onBrowserOpen = {
+                val searchTerm = uiState.confirmedSearchTerm ?: return@HomeSceneContent
+                browserClient.openSearchResults(searchTerm)
+                viewModel.onBrowserOpen()
+            }
         )
     }
 }
@@ -54,9 +65,10 @@ fun HomeScene(browserClient: BrowserClient) {
 @Composable
 private fun HomeSceneContent(
     contentPadding: PaddingValues,
-    searchTerm: String,
+    uiState: HomeUiState,
     onSearchTermChange: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    onBrowserOpen: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -76,11 +88,21 @@ private fun HomeSceneContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                value = searchTerm,
+                value = uiState.initialSearchTerm,
                 onValueChange = onSearchTermChange,
                 onSearch = onSearch
             )
         }
+    }
+
+    // When search term is confirmed, display dialog to open search results in browser
+    uiState.confirmedSearchTerm?.let {
+        AlertDialog(
+            title = stringResource(R.string.dialog_title_open_browser),
+            text = stringResource(R.string.dialog_text_open_browser, it),
+            onConfirm = onBrowserOpen,
+            onDismissRequest = {}
+        )
     }
 }
 

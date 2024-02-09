@@ -3,7 +3,8 @@
     <!-- Home -->
     <string name="subtitle_home">Powered by DuckDuckGo</string>
     <string name="placeholder_initial_search_term">Type initial keyword to search</string>
-    <string name="label_search_button">Begin search</string>
+    <string name="dialog_title_open_browser">Opening search results…</string>
+    <string name="dialog_text_open_browser">View search results for \"%s\" in Google</string>
     <!-- Browser -->
     <string name="error_open_browser">Unable to open link in a browser. Check if a browser application is installed.</string>
     <!-- Search Bar -->
