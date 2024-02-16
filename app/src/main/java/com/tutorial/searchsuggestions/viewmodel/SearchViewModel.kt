@@ -50,10 +50,16 @@ class SearchViewModel @Inject constructor(
     fun onQueryChange(value: String) {
         _uiState.update { it.copy(query = value) }
 
-        // Cancel job if underway to re-execute search based on new query
+        // Cancel job if underway (since previous query has become irrelevant)
         job?.cancel()
 
-        search()
+        if (value.isBlank()) {
+            // If query is empty, do not display previous results
+            _uiState.update { it.copy(response = null, isLoading = false) }
+        } else {
+            // Otherwise, perform search based on new query
+            search()
+        }
     }
 
     fun onClear() {
