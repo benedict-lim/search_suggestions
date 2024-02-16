@@ -22,13 +22,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.tutorial.searchsuggestions.LocalNavController
 import com.tutorial.searchsuggestions.setSearchTerm
 import com.tutorial.searchsuggestions.ui.component.SearchBar
 import com.tutorial.searchsuggestions.ui.component.SearchSuggestionsList
+import com.tutorial.searchsuggestions.ui.component.ValidationErrorDialog
 import com.tutorial.searchsuggestions.viewmodel.SearchViewModel
 import com.tutorial.searchsuggestions.viewmodel.uistate.SearchUiState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,20 +38,31 @@ fun SearchScene(initialSearchTerm: String?, viewModel: SearchViewModel = hiltVie
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
 
-    // Set initial search term in search bar and retrieve results
     LaunchedEffect(Unit) {
+        // Set initial search term in search bar and retrieve results
         if (!initialSearchTerm.isNullOrBlank()) {
             viewModel.onQueryChange(initialSearchTerm)
+        }
+
+        // Begin search when query is confirmed
+        viewModel.uiState.collectLatest {
+            if (it.isConfirmed) navController.setSearchTerm(it.query)
         }
     }
 
     val uiState = viewModel.uiState.collectAsState().value
 
-    uiState.error?.let {
+    // Display network error in Snackbar
+    uiState.networkError?.let {
         coroutineScope.launch {
             snackbarHostState.showSnackbar(it.message.orEmpty())
-            viewModel.onErrorConfirmed()
+            viewModel.onNetworkErrorHandled()
         }
+    }
+
+    // Display validation error in Dialog
+    uiState.validationError?.let {
+        ValidationErrorDialog(error = it, onConfirm = { viewModel.onValidationErrorHandled() })
     }
 
     Scaffold(
@@ -61,7 +73,7 @@ fun SearchScene(initialSearchTerm: String?, viewModel: SearchViewModel = hiltVie
                     .padding(16.dp),
                 query = uiState.query,
                 onQueryChange = { viewModel.onQueryChange(it) },
-                onSearch = { navController.setSearchTerm(uiState.query) },
+                onSearch = { viewModel.onQueryConfirmed() },
                 onClose = { navController.popBackStack() },
                 onClear = { viewModel.onClear() }
             )

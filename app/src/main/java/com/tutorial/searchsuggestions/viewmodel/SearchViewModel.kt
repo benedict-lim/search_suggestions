@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tutorial.searchsuggestions.api.model.SearchSuggestionsResponse
 import com.tutorial.searchsuggestions.usecase.GetSearchSuggestionsUseCase
+import com.tutorial.searchsuggestions.validation.validateNotEmpty
 import com.tutorial.searchsuggestions.viewmodel.uistate.SearchUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -44,7 +45,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onSearchFailure(error: Throwable) {
-        _uiState.update { it.copy(response = null, isLoading = false, error = error) }
+        _uiState.update { it.copy(response = null, isLoading = false, networkError = error) }
     }
 
     fun onQueryChange(value: String) {
@@ -66,8 +67,20 @@ class SearchViewModel @Inject constructor(
         _uiState.update { it.copy(query = "") }
     }
 
-    fun onErrorConfirmed() {
-        _uiState.update { it.copy(error = null) }
+    fun onQueryConfirmed() {
+        val validationError = uiState.value.query.validateNotEmpty()
+
+        _uiState.update {
+            it.copy(isConfirmed = validationError == null, validationError = validationError)
+        }
+    }
+
+    fun onNetworkErrorHandled() {
+        _uiState.update { it.copy(networkError = null) }
+    }
+
+    fun onValidationErrorHandled() {
+        _uiState.update { it.copy(validationError = null) }
     }
 
     private companion object {

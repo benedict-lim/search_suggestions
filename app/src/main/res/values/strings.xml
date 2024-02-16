@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Search Suggestions</string>
+    <!-- Common -->
+    <string name="error">Error</string>
     <!-- Home -->
     <string name="subtitle_home">Powered by DuckDuckGo</string>
     <string name="placeholder_initial_search_term">Type initial keyword to search</string>
@@ -13,4 +15,6 @@
     <string name="content_description_search">Search</string>
     <string name="content_description_select">Select</string>
     <string name="placeholder_search_bar">Type keyword for suggestions</string>
+    <!-- Validation Error -->
+    <string name="validation_error_empty_input">At least one character is required</string>
 </resources>
