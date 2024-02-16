@@ -49,7 +49,10 @@ class MainActivity : ComponentActivity() {
                 composable(
                     Router.Search.fullRoute,
                     arguments = listOf(
-                        navArgument(Router.Search.param) { type = NavType.StringType}
+                        navArgument(Router.Search.param) {
+                            type = NavType.StringType
+                            nullable = true
+                        }
                     )
                 ) {
                     SearchScene(initialSearchTerm = it.arguments?.getString(Router.Search.param))

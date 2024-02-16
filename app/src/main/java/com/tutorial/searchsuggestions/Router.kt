@@ -7,9 +7,9 @@ internal enum class Router(val route: String, val param: String) {
     Search("search", "keyword");
 
     val fullRoute: String
-        get() = if (param.isBlank()) route else "$route/{$param}"
+        get() = if (param.isBlank()) route else "$route?$param={$param}"
 
-    fun createRoute(param: String): String = "$route/$param"
+    fun createRoute(arg: String): String = if (param.isBlank()) route else "$route?$param=$arg"
 
     companion object {
         const val ARG_QUERY = "query"
