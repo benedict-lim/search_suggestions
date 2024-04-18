@@ -52,33 +52,39 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    testOptions {
-        unitTests {
-            isReturnDefaultValues = true
-        }
-    }
 }
 
 dependencies {
 
+    // Android
     implementation(libs.core.ktx)
     implementation(libs.browser)
     implementation(libs.lifecycle.runtime.ktx)
+
+    // Network
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.activity.compose)
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+
+    // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.material.icons.extended)
+
+    // Compose Support
+    implementation(libs.activity.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
+
+    // Dependency Injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    // Test
     testImplementation(libs.junit)
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.androidx.test.core)
@@ -88,10 +94,17 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.android.compiler)
+
+    // Android Test
+    androidTestImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockito.kotlin)
+
+    // Debug Tools
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 }
