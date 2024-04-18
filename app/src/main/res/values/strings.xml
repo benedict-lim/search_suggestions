@@ -12,8 +12,8 @@
     <!-- Search Bar -->
     <string name="content_description_close">Close</string>
     <string name="content_description_clear">Clear</string>
-    <string name="content_description_search">Search</string>
-    <string name="content_description_select">Select</string>
+    <string name="content_description_search">Search %s</string>
+    <string name="content_description_select">Select %s</string>
     <string name="placeholder_search_bar">Type keyword for suggestions</string>
     <!-- Validation Error -->
     <string name="validation_error_empty_input">At least one character is required</string>

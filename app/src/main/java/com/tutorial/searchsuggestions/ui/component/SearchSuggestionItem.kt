@@ -41,7 +41,7 @@ fun SearchSuggestionItem(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        SearchIcon()
+        SearchIcon(value = value)
 
         ValueText(keyword = keyword, value = value)
 
@@ -50,11 +50,11 @@ fun SearchSuggestionItem(
 }
 
 @Composable
-private fun SearchIcon() {
+private fun SearchIcon(value: String) {
     Icon(
         imageVector = Icons.Filled.Search,
         tint = Color.DarkGray,
-        contentDescription = stringResource(R.string.content_description_search)
+        contentDescription = stringResource(R.string.content_description_search, value)
     )
 }
 
@@ -84,7 +84,7 @@ private fun SelectIcon(value: String, onSelect: (String) -> Unit) {
         modifier = Modifier.clickable { onSelect(value) },
         imageVector = Icons.Filled.ArrowOutward,
         tint = Color.DarkGray,
-        contentDescription = stringResource(R.string.content_description_select)
+        contentDescription = stringResource(R.string.content_description_select, value)
     )
 }
 
